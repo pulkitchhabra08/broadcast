@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BROADCAST.</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Three.js CDN for 3D Graphics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#00f0ff',
+              violet: '#7000ff',
+              emerald: '#00ff9d',
+              dark: '#070709',
+              darker: '#030304'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #030304;
+      color: #ececf1;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .glass-card {
+      background: rgba(10, 11, 16, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 35px -10px rgba(0, 240, 255, 0.2);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #00f0ff 0%, #7000ff 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* Terminal Scanlines Texture */
+    .scanlines {
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.03),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.03)
+      );
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen selection:bg-brand-cyan selection:text-black">
+
+  <!-- Scanlines Overlay -->
+  <div class="fixed inset-0 scanlines z-40"></div>
+
+  <!-- Interactive 3D Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Ambient Glow Gradients -->
+  <div class="fixed top-[-10%] left-[20%] w-[500px] h-[500px] bg-brand-cyan/15 rounded-full blur-[140px] pointer-events-none"></div>
+  <div class="fixed top-[40%] right-[-10%] w-[600px] h-[600px] bg-brand-violet/15 rounded-full blur-[160px] pointer-events-none"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="relative z-50 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-cyan to-brand-violet p-[1px]">
+        <div class="w-full h-full bg-brand-darker rounded-xl flex items-center justify-center">
+          <i data-lucide="skull" class="w-5 h-5 text-brand-cyan"></i>
+        </div>
+      </div>
+      <span class="font-display font-black text-xl tracking-wider text-white"><span class="text-brand-cyan">BROADCAST.</span></span>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <div class="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/60 border border-brand-cyan/30 text-brand-cyan text-xs">
+        <span class="w-2 h-2 rounded-full bg-brand-emerald animate-ping"></span>
+        <span class="font-bold tracking-wider">WTF IS HAPPENING IN LNMIIT</span>
+      </div>
+      <!-- <a href="#calendar-view" class="px-5 py-2.5 rounded-xl text-xs font-bold text-black bg-white hover:bg-brand-cyan transition-all duration-300 shadow-lg shadow-white/10 hover:shadow-brand-cyan/30 uppercase tracking-wider">
+        Sync Or Regret
+      </a> -->
+    </div>
+  </nav>
+
+  <!-- Hero Section (Option 2 Theme) -->
+  <header class="relative z-10 max-w-5xl mx-auto px-6 pt-16 pb-20 text-center">
+    <!-- Eyebrow Badge -->
+    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass-card mb-8 border-brand-cyan/30">
+      <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+      <span class="text-xs uppercase tracking-widest text-brand-cyan font-bold">// BUILT OUT OF SHEER FRUSTRATION</span>
+    </div>
+
+    <!-- Main Title -->
+    <h5 class="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] mb-8 font-display">
+      Your webmail has 40 unread emails.<br />
+      <span class="text-gradient">38 are pure bullshit.</span>
+    </h5>
+
+    <!-- Subtitle -->
+    <p class="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+A random guy crying over a lost gym shaker, 2 emails about mess updates, and 8 reminders for a survey nobody will fill out. Meanwhile, the actual quiz in LT-5 and the Plinth hackathon deadline were buried in a 4MB flyer at 11:59 PM. We automated the extraction so you can go back to sleeping through your 8 AM.So I made a simple script to extract all the important deadlines and event details and directly sync to a public calendar.</p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="https://calendar.google.com/calendar/u/0?cid=Y18xMTQ5MzIxYWM4Zjk1NzI3MzIwZTMwYTQyNmJmYTMwYWVhZmJkMDM2OGFkMzExOTRjNGU3YmNhNTA3NmUyYzI5QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-violet text-black font-extrabold text-sm tracking-wide hover:brightness-110 transition-all duration-300 shadow-xl shadow-brand-cyan/25 flex items-center justify-center space-x-2">
+        <i data-lucide="calendar-check" class="w-4 h-4"></i>
+        <span>SYNC OR REGRET LATER</span>
+      </a>
+      <!-- <button onclick="copyICalUrl()" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-gray-200 text-sm hover:text-brand-cyan hover:border-brand-cyan/50 transition-all duration-300 flex items-center justify-center space-x-2">
+        <i data-lucide="copy" class="w-4 h-4"></i>
+        <span id="copy-btn-text">COPY .ICS FEED URL</span>
+      </button> -->
+    </div>
+  </header>
+
+  <!-- Feature Grid -->
+  <section class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Feature 1 -->
+      <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-6 text-brand-cyan">
+          <i data-lucide="mail-x" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2 font-display">Administrative Bypass</h3>
+        <p class="text-gray-400 text-xs leading-relaxed">
+          Strips out greeting rituals, dean circulars, hostel policy memos, and generic newsletters without a concrete event date attached.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+        <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center mb-6 text-brand-violet">
+          <i data-lucide="eye" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2 font-display">Poster OCR Extraction</h3>
+        <p class="text-gray-400 text-xs leading-relaxed">
+          Clubs send zero-text emails with a 1080x1920 poster attached. Gemini multimodal vision rips dates, room numbers, and RSVP links straight off the graphic.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-6 text-brand-emerald">
+          <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2 font-display">Fuzzy Deduplication</h3>
+        <p class="text-gray-400 text-xs leading-relaxed">
+          When clubs spam 5 follow-up reminders with "Only 2 Hours Left!", the engine updates registration details instead of cluttering your calendar with clones.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+ 
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-white/5 py-8 text-center text-[11px] text-gray-500">
+    <p>build by frustation of a engineering freshman &bull; powered by diet coke.</p>
+    <p class="mt-1 text-gray-600">// REGARDS, SOME TIRED UNDERGRAD. <a href="https://www.linkedin.com/in/pulkitchhabra08/">(pulkit chhabra)</a></p>
+  </footer>
+
+  <!-- Script Logic (3D Interactive Mesh & UI Handlers) -->
+  <script>
+    lucide.createIcons();
+
+    // Set your calendar URL here
+    const ICAL_URL = "https://calendar.google.com/calendar/ical/YOUR_CALENDAR_ID@group.calendar.google.com/public/basic.ics";
+
+    function copyICalUrl() {
+      navigator.clipboard.writeText(ICAL_URL).then(() => {
+        const btnText = document.getElementById("copy-btn-text");
+        if (btnText) {
+          const original = btnText.innerText;
+          btnText.innerText = "COPIED TO CLIPBOARD //";
+          setTimeout(() => { btnText.innerText = original; }, 2000);
+        } else {
+          alert("Calendar URL copied!");
+        }
+      });
+    }
+
+    function switchView(tab) {
+      const viewWeb = document.getElementById("view-web");
+      const viewInstructions = document.getElementById("view-instructions");
+      const btnWeb = document.getElementById("btn-web");
+      const btnInstructions = document.getElementById("btn-instructions");
+
+      if (tab === "web") {
+        viewWeb.classList.remove("hidden");
+        viewInstructions.classList.add("hidden");
+        btnWeb.className = "px-4 py-2 rounded-lg text-xs font-bold text-white bg-white/10 transition-all";
+        btnInstructions.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
+      } else {
+        viewWeb.classList.add("hidden");
+        viewInstructions.classList.remove("hidden");
+        btnInstructions.className = "px-4 py-2 rounded-lg text-xs font-bold text-white bg-white/10 transition-all";
+        btnWeb.className = "px-4 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition-all";
+      }
+    }
+
+    // Three.js Interactive Wireframe Field
+    const canvas = document.getElementById("bg-canvas");
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const geometry = new THREE.PlaneGeometry(120, 120, 64, 64);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.16
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+    plane.rotation.x = -Math.PI / 2.6;
+    plane.position.y = -18;
+    plane.position.z = -20;
+    scene.add(plane);
+
+    camera.position.z = 30;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    window.addEventListener("mousemove", (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    let clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
+
+      plane.position.z = -20 + Math.sin(elapsedTime * 0.5) * 2;
+      plane.rotation.z = elapsedTime * 0.03;
+
+      camera.position.x += (mouseX * 4 - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY * 4 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
