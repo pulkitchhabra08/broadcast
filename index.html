@@ -143,10 +143,11 @@
 A random guy crying over a lost gym shaker, 2 emails about mess updates, and 8 reminders for a survey nobody will fill out. Meanwhile, the actual quiz in LT-5 and the Plinth hackathon deadline were buried in a 4MB flyer at 11:59 PM. We automated the extraction so you can go back to sleeping through your 8 AM.So I made a simple script to extract all the important deadlines and event details and directly sync to a public calendar.</p>
 
     <!-- Action Buttons -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="https://calendar.google.com/calendar/u/0?cid=Y18xMTQ5MzIxYWM4Zjk1NzI3MzIwZTMwYTQyNmJmYTMwYWVhZmJkMDM2OGFkMzExOTRjNGU3YmNhNTA3NmUyYzI5QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-violet text-black font-extrabold text-sm tracking-wide hover:brightness-110 transition-all duration-300 shadow-xl shadow-brand-cyan/25 flex items-center justify-center space-x-2">
-        <i data-lucide="calendar-check" class="w-4 h-4"></i>
-        <span>SYNC OR REGRET LATER</span>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+  <button onclick="subscribeCalendar()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-violet text-black font-extrabold text-sm tracking-wide hover:brightness-110 transition-all duration-300 shadow-xl shadow-brand-cyan/25 flex items-center justify-center space-x-2 cursor-pointer">
+    <i data-lucide="calendar-check" class="w-4 h-4"></i>
+    <span>SYNC OR REGRET LATER</span>
+  </button>
       </a>
       <!-- <button onclick="copyICalUrl()" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-gray-200 text-sm hover:text-brand-cyan hover:border-brand-cyan/50 transition-all duration-300 flex items-center justify-center space-x-2">
         <i data-lucide="copy" class="w-4 h-4"></i>
@@ -295,6 +296,20 @@ A random guy crying over a lost gym shaker, 2 emails about mess updates, and 8 r
       renderer.render(scene, camera);
     }
     animate();
+    function subscribeCalendar() {
+  const calId = "c_1149321ac8f95727320e30a426bfa30aeafbd0368ad31194c4e7bca5076e2c29@group.calendar.google.com";
+  const icsUrl = `calendar.google.com/calendar/ical/${encodeURIComponent(calId)}/public/basic.ics`;
+  
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isIOS) {
+    // Triggers Apple Calendar's 1-tap system subscribe prompt
+    window.location.href = `webcal://${icsUrl}`;
+  } else {
+    // For Android & Desktop: Opens Google Calendar's native 1-click import dialog
+    window.location.href = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent('https://' + icsUrl)}`;
+  }
+}
   </script>
 </body>
 </html>
