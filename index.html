@@ -296,18 +296,26 @@ A random guy crying over a lost gym shaker, 2 emails about mess updates, and 8 r
       renderer.render(scene, camera);
     }
     animate();
-    function subscribeCalendar() {
+function subscribeCalendar() {
   const calId = "c_1149321ac8f95727320e30a426bfa30aeafbd0368ad31194c4e7bca5076e2c29@group.calendar.google.com";
-  const icsUrl = `calendar.google.com/calendar/ical/${encodeURIComponent(calId)}/public/basic.ics`;
+  const icsWebUrl = `https://calendar.google.com/calendar/ical/${encodeURIComponent(calId)}/public/basic.ics`;
+  
+  // Google's direct 1-click subscription endpoint
+  const webSubscribeUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(icsWebUrl)}`;
   
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   if (isIOS) {
-    // Triggers Apple Calendar's 1-tap system subscribe prompt
-    window.location.href = `webcal://${icsUrl}`;
+    // 1. Try launching the native Google Calendar iOS app directly
+    window.location.href = "googlecalendar://";
+
+    // 2. If the app isn't installed, redirect to Google Calendar web import after 500ms
+    setTimeout(() => {
+      window.location.href = webSubscribeUrl;
+    }, 500);
   } else {
-    // For Android & Desktop: Opens Google Calendar's native 1-click import dialog
-    window.location.href = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent('https://' + icsUrl)}`;
+    // Android / Desktop: Directly triggers the Google Calendar account import prompt
+    window.location.href = webSubscribeUrl;
   }
 }
   </script>
